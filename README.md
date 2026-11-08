@@ -62,8 +62,24 @@ Copy the `jobId` from the response, then check on it (repeat until `status` is `
 curl https://weatherimg-z7idlr2ityrks.azurewebsites.net/api/jobs/PASTE_JOB_ID_HERE
 ```
 
-When it's done, the `images` field holds a link for each generated image.
-You can also use `WeatherImages/api.http` with the VS Code REST Client extension.
+When it's done, the `images` field holds one link per generated image — open any
+of them in a browser to view the picture. (The links are temporary and expire about
+an hour after you fetch them; just call the status endpoint again for fresh ones.)
+
+**On Windows PowerShell**, type `curl.exe` (plain `curl` is an alias for a different
+command and won't accept `-X`). This one block starts a job, waits for it to finish,
+and opens the first image in your browser — piping through `ConvertFrom-Json` also
+tidies the `&` you'd otherwise see in the raw links:
+
+```powershell
+$base = "https://weatherimg-z7idlr2ityrks.azurewebsites.net/api"
+$id = (curl.exe -s -X POST "$base/jobs" | ConvertFrom-Json).JobId
+do { Start-Sleep 5; $s = curl.exe -s "$base/jobs/$id" | ConvertFrom-Json } while ($s.Status -ne "Completed")
+Start-Process $s.Images[0]   # opens the first weather image in your browser
+```
+
+You can also use `WeatherImages/api.http` with the VS Code REST Client extension or
+Rider's built-in HTTP client.
 
 ### Option 2 — run it locally
 
