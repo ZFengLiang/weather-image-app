@@ -209,6 +209,9 @@ DocProject/Help/html
 # Click-Once directory
 publish/
 
+# Deployment package produced by deploy.ps1
+deploy.zip
+
 # Publish Web Output
 *.[Pp]ublish.xml
 *.azurePubxml
@@ -426,3 +429,7 @@ FodyWeavers.xsd
 
 # Official VS Code C# Dev Kit Extension exclusion
 #*.lscache
+
+# JetBrains Rider / IntelliJ IDE settings
+.idea/
+*.sln.iml

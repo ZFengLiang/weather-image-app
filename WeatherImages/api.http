@@ -1,0 +1,30 @@
+### Weather Image App - API documentation
+### Use with the VS Code "REST Client" extension (or JetBrains HTTP client).
+### Replace @host with your deployed Function App host, then run the requests
+### top-to-bottom: start a job, copy the returned jobId, then poll the status.
+
+# ---- Choose an environment -------------------------------------------------
+# Local (func start):
+# @host = http://localhost:7071
+
+# Deployed Function App (live):
+@host = https://weatherimg-z7idlr2ityrks.azurewebsites.net
+
+@baseUrl = {{host}}/api
+
+### 1. Start a new image-creation job.
+# Returns 202 Accepted with a unique jobId and a status URL.
+POST {{baseUrl}}/jobs
+Content-Type: application/json
+
+###
+
+# Capture the jobId from the response above and paste it here:
+@jobId = REPLACE-WITH-RETURNED-JOBID
+
+### 2. Fetch job status + generated image links.
+# While running: status "Running", completed < total.
+# When finished: status "Completed", "images" holds one SAS link per station.
+GET {{baseUrl}}/jobs/{{jobId}}
+
+###

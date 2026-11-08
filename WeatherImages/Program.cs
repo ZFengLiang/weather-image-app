@@ -1,20 +1,29 @@
-using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.Azure.Functions.Worker;
+using Azure.Data.Tables;
+using Azure.Storage.Blobs;
+using Azure.Storage.Queues;
 using Microsoft.Azure.Functions.Worker.Builder;
-using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using OpenTelemetry;
+using WeatherImages.Services;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
-{
-    builder.Services.AddOpenTelemetry()
-        .UseFunctionsWorkerDefaults()
-        .UseAzureMonitorExporter();
-}
+string storageConnection = builder.Configuration["AzureWebJobsStorage"]!;
+
+// Storage clients. Base64 encoding matches the Functions host queue default.
+builder.Services.AddSingleton(new QueueServiceClient(
+    storageConnection,
+    new QueueClientOptions { MessageEncoding = QueueMessageEncoding.Base64 }));
+builder.Services.AddSingleton(new BlobServiceClient(storageConnection));
+builder.Services.AddSingleton(new TableServiceClient(storageConnection));
+
+// App services.
+builder.Services.AddHttpClient<WeatherService>();
+builder.Services.AddHttpClient<ImageService>();
+builder.Services.AddSingleton<QueuePublisher>();
+builder.Services.AddSingleton<StatusStore>();
+builder.Services.AddSingleton<BlobImageStore>();
 
 builder.Build().Run();
