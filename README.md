@@ -5,7 +5,7 @@ A small cloud project for my **Server-Side Programming** course.
 The idea is simple: you call one API endpoint, and in the background the app pulls
 live Dutch weather data, generates a batch of images with that weather stamped on
 them, and gives you back links to view them. It runs on Azure and is built to show
-the **serverless + queue** pattern — the first request returns instantly, and the
+the **serverless + queue** pattern - the first request returns instantly, and the
 slow work (making ~40 images) happens in the background.
 
 ## What it does
@@ -14,7 +14,7 @@ slow work (making ~40 images) happens in the background.
 2. Behind the scenes it fetches ~40 Dutch weather stations, then creates one image
    per station (a photo with that station's weather drawn on top).
 3. Every image is saved to private Blob Storage.
-4. You send `GET /api/jobs/{id}` → you see the progress, and once it's finished you
+4. You send `GET /api/jobs/{id}` > you see the progress, and once it's finished you
    get links to all the generated images.
 
 ```
@@ -30,7 +30,7 @@ GET /api/jobs/{id} ◄───────── progress + image links ◄─�
 - Saved every image to **Blob Storage** and served them with short-lived **SAS links** (the container stays private).
 - Tracked job and per-image progress in **Table Storage** for the status endpoint.
 - Wrote the whole infrastructure as a **Bicep** template plus a one-command **deploy script**.
-- **Deployed it to Azure and tested it end to end** — a full run generated 40/40 images successfully.
+- **Deployed it to Azure and tested it end to end** - a full run generated 40/40 images successfully.
 
 ## What I used
 
@@ -48,7 +48,7 @@ GET /api/jobs/{id} ◄───────── progress + image links ◄─�
 
 ## How to run it
 
-### Option 1 — try the live API
+### Option 1 - try the live API
 
 It's already deployed. Start a job:
 
@@ -81,7 +81,7 @@ Start-Process $s.Images[0]   # opens the first weather image in your browser
 You can also use `WeatherImages/api.http` with the VS Code REST Client extension or
 Rider's built-in HTTP client.
 
-### Option 2 — run it locally
+### Option 2 - run it locally
 
 You need the [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
 and [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite)
@@ -95,7 +95,7 @@ func start
 `local.settings.json` already points storage at the emulator, so there's nothing to
 configure. The API runs at `http://localhost:7071`.
 
-### Option 3 — deploy your own copy
+### Option 3 - deploy your own copy
 
 ```bash
 az login
