@@ -45,6 +45,7 @@ GET /api/jobs/{id} ◄───────── progress + image links ◄─�
 | **Buienradar API** | live Dutch weather data |
 | **Picsum Photos** | free base images, no API key needed |
 | **Bicep + Azure CLI** | infrastructure and deployment |
+| **Visual Studio 2022** | where I write, run (F5) and debug the app |
 
 ## How to run it
 
@@ -78,22 +79,29 @@ do { Start-Sleep 5; $s = curl.exe -s "$base/jobs/$id" | ConvertFrom-Json } while
 Start-Process $s.Images[0]   # opens the first weather image in your browser
 ```
 
-You can also use `WeatherImages/api.http` with the VS Code REST Client extension or
-Rider's built-in HTTP client.
+You can also use `WeatherImages/api.http` — it works with the HTTP client built
+into **Visual Studio 2022**, the VS Code REST Client extension, or Rider. Just hit
+**Send request** above each request, copy the `jobId` the POST returns into the
+`@jobId` line, then send the GET to watch it finish.
 
 ### Option 2 - run it locally
 
-You need the [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
+I build and run this in **Visual Studio 2022**. Open `WeatherImages.sln`, make sure
+the **Azure development** workload is installed, and press **F5** (the green ▶).
+Visual Studio starts the Functions host and the local storage emulator (**Azurite**)
+for you — `local.settings.json` already points storage at the emulator, so there's
+nothing to set up. The API comes up on a local port it prints in the console
+(for me it's `http://localhost:7189`).
+
+Prefer the command line? You can run it with the
+[Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
 and [Azurite](https://learn.microsoft.com/azure/storage/common/storage-use-azurite)
-(a local storage emulator). Start Azurite, then:
+instead (this one defaults to `http://localhost:7071`):
 
 ```bash
 cd WeatherImages
 func start
 ```
-
-`local.settings.json` already points storage at the emulator, so there's nothing to
-configure. The API runs at `http://localhost:7071`.
 
 ### Option 3 - deploy your own copy
 
@@ -111,6 +119,7 @@ template, deploys it, and prints your API URL at the end.
 ## Project layout
 
 ```
+WeatherImages.sln  # open this in Visual Studio 2022
 WeatherImages/
   Program.cs       # sets up the storage clients and services
   Functions/       # the 4 functions
