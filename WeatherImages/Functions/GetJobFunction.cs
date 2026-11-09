@@ -31,9 +31,8 @@ public class GetJobFunction
         var job = await _status.GetJobAsync(jobId, ct);
         if (job is null)
         {
-            var notFound = req.CreateResponse();
+            var notFound = req.CreateResponse(HttpStatusCode.NotFound);
             await notFound.WriteAsJsonAsync(new { error = "Job not found", jobId }, ct);
-            notFound.StatusCode = HttpStatusCode.NotFound;
             return notFound;
         }
 
@@ -52,9 +51,8 @@ public class GetJobFunction
             Completed: stations.Count(s => s.Status == "Done"),
             Images: images);
 
-        var response = req.CreateResponse();
+        var response = req.CreateResponse(HttpStatusCode.OK);
         await response.WriteAsJsonAsync(result, ct);
-        response.StatusCode = HttpStatusCode.OK;
         return response;
     }
 }

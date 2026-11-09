@@ -33,9 +33,8 @@ public class StartJobFunction
 
         string statusUrl = $"{req.Url.GetLeftPart(UriPartial.Authority)}/api/jobs/{jobId}";
 
-        var response = req.CreateResponse();
+        var response = req.CreateResponse(HttpStatusCode.Accepted);
         await response.WriteAsJsonAsync(new StartJobResponse(jobId, statusUrl), ct);
-        response.StatusCode = HttpStatusCode.Accepted;
         return response;
     }
 }
