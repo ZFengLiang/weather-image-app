@@ -86,11 +86,24 @@ into **Visual Studio 2022**, the VS Code REST Client extension, or Rider. Just h
 
 ### Option 2 - run it locally
 
-I build and run this in **Visual Studio 2022**. Open `WeatherImages.sln`, make sure
-the **Azure development** workload is installed, and press **F5**. Visual Studio
-starts the Functions host and the local storage emulator (**Azurite**) for you, so
-there's nothing to configure. The API comes up on a local port it prints in the
-console (for me it's `http://localhost:7189`).
+Local runs need a `WeatherImages/local.settings.json` (it's gitignored, so it isn't
+in the repo). Create one with this — `UseDevelopmentStorage=true` points storage at
+the local **Azurite** emulator:
+
+```json
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated"
+  }
+}
+```
+
+Then, in **Visual Studio 2022**: open `WeatherImages.sln`, make sure the **Azure
+development** workload is installed, and press **F5**. Visual Studio starts the
+Functions host and Azurite for you. The API comes up on a local port it prints in
+the console (for me it's `http://localhost:7189`).
 
 Prefer the command line? You can run it with the
 [Azure Functions Core Tools](https://learn.microsoft.com/azure/azure-functions/functions-run-local)
