@@ -115,6 +115,21 @@ cd WeatherImages
 func start
 ```
 
+#### Try it from the built-in HTTP client
+
+Once it's running (after **F5**), you can call the API straight from
+**`WeatherImages/api.http`** using the HTTP client built into Visual Studio 2022 —
+no terminal needed. In that file, point `@host` at your local app by uncommenting
+the local line and setting your port, e.g.:
+
+```
+@host = http://localhost:7189
+```
+
+Then click **Send request** above the **POST** to start a job, copy the `jobId` from
+the response into the `@jobId` line, and click **Send request** above the **GET** to
+watch it go from `Running` to `Completed` (the `images` array then holds the links).
+
 ### Option 3 - deploy your own copy
 
 ```bash
@@ -128,6 +143,13 @@ az login
 The script publishes the code, creates all the Azure resources from the Bicep
 template, deploys it, and prints your API URL at the end.
 
+All the infrastructure lives in one file — **`infra/main.bicep`**, in the `infra/`
+folder at the repo root. That Bicep template defines every Azure resource the app
+needs: the **storage account** (blobs, queues and table), the **Flex Consumption
+function app**, and the **monitoring** (Application Insights + Log Analytics).
+`deploy.ps1` just points the Azure CLI at it, so there's nothing to click in the
+portal.
+
 ## Project layout
 
 ```
@@ -138,7 +160,8 @@ WeatherImages/
   Services/        # weather, image drawing, blob (SAS), status table, queue
   Fonts/           # a bundled font so text renders on any host
   api.http         # ready-made API requests to try
-infra/main.bicep   # all the Azure resources
+infra/             # the Azure infrastructure folder
+  main.bicep       # all the Azure resources, as one Bicep template
 deploy.ps1         # publish + create resources + deploy, in one go
 ```
 
